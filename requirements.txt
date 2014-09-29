@@ -3,4 +3,4 @@ flake8==2.1.0
 pep8==1.5.7
 mccabe==0.2.1
 coverage==3.7.1
-lettuce_webdriver=0.2.19
+lettuce_webdriver==0.2.19
