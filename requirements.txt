@@ -1,6 +1,7 @@
 lettuce==0.2.19
 flake8==2.2.3
 mccabe==0.2.1
+coverage==3.7.1
 lettuce_webdriver==0.3.5
 Flask==0.10.1
 Flask-Script==2.0.5
