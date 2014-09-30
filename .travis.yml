@@ -3,6 +3,8 @@ python:
   - "3.3"
 # command to install dependencies
 install: "pip install -r requirements.txt"
+before_script: 
+  - "flake8 --max-complexity=5 manage.py sched/"
 # command to run tests
 script: 
-  - nosetests
+  - nosetests --cover-package=manage,sched --with-doctest --with-coverage manage.py sched
