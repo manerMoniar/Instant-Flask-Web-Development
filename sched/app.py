@@ -11,5 +11,5 @@ def hello():
     """
     return 'Hello, world!'
 
-if __name__ == '__main__': # pragma: no cover
+if __name__ == '__main__':  # pragma: no cover
     app.run(debug=True)
