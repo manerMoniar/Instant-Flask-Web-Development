@@ -7,4 +7,4 @@ before_script:
   - "flake8 --max-complexity=5 manage.py sched/"
 # command to run tests
 script: 
-  - nosetests --cover-package=manage,sched --with-doctest --with-coverage manage.py sched
+  - nosetests --cover-package=manage,sched --with-doctest --with-coverage --cover-min-percentage=95 manage.py sched
