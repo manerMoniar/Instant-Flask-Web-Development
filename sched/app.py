@@ -1,6 +1,16 @@
 from flask import Flask
+from flask.ext.sqlalchemy import SQLAlchemy
+from models import Base
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sched.db'
+
+# Use Flask-SQLAlchemy for its engine and session
+# configuration. Load the extension, giving it the app object,
+# and override its default Model class with the pure
+# SQLAlchemy declarative Base class.
+db = SQLAlchemy(app)
+db.Model = Base
 
 
 @app.route('/')
