@@ -1,4 +1,3 @@
-from lettuce import *
 import unittest
 import sched.app as ap
 import sched.models as mod
