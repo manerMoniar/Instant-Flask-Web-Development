@@ -1,9 +1,7 @@
+from lettuce import *
 import unittest
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.dirname(__file__) + '/' + '../sched'))
-import app as ap
-import models as mod
+import sched.app as ap
+import sched.models as mod
 from datetime import datetime
 from datetime import timedelta
 
