@@ -16,22 +16,13 @@ db = SQLAlchemy(app)
 db.Model = Base
 
 
-@app.route('/')
-def hello():
-    """
-    >>> hello()
-    'Hello, world!'
-    """
-    return 'Hello, world!'
-
-
 @app.route('/appointments/')
 def appointment_list():
-    """
-    >>> appointment_list()
-    'Listing of all appointments we have.'
-    """
-    return 'Listing of all appointments we have.'
+    """Provide HTML listing of all appointments."""
+    # Query: Get all Appointment objects, sorted by date.
+    appts = (db.session.query(Appointment).order_by(
+        Appointment.start.asc()).all())
+    return render_template('appointment/index.html', appts=appts)
 
 
 @app.route('/appointments/<int:appointment_id>/')
@@ -47,11 +38,17 @@ def appointment_detail(appointment_id):
 
 @app.route('/appointments/<int:appointment_id>/edit/', methods=['GET', 'POST'])
 def appointment_edit(appointment_id):
-    """
-    >>> appointment_edit(5)
-    'Form to edit appointment #5.'
-    """
-    return 'Form to edit appointment #{}.'.format(appointment_id)
+    """Provide HTML form to edit a given appointment."""
+    appt = db.session.query(Appointment).get(appointment_id)
+    if appt is None:
+        abort(404)
+    form = AppointmentForm(request.form, appt)
+    if request.method == 'POST' and form.validate():
+        form.populate_obj(appt)
+        db.session.commit()
+        # Success. Send the user back to the detail view.
+        return redirect(url_for('appointment_detail', appointment_id=appt.id))
+    return render_template('appointment/edit.html', form=form)
 
 
 @app.route('/appointments/create/', methods=['GET', 'POST'])
@@ -71,7 +68,16 @@ def appointment_create():
 
 @app.route('/appointments/<int:appointment_id>/delete/', methods=['DELETE'])
 def appointment_delete(appointment_id):
-    raise NotImplementedError('DELETE')
+    """Delete record using HTTP DELETE, respond with JSON."""
+    appt = db.session.query(Appointment).get(appointment_id)
+    if appt is None:
+        # Abort with Not Found, but with simple JSON response.
+        response = jsonify({'status': 'Not Found'})
+        response.status = 404
+        return response
+    db.session.delete(appt)
+    db.session.commit()
+    return jsonify({'status': 'OK'})
 
 
 if __name__ == '__main__':  # pragma: no cover

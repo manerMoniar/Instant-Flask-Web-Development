@@ -5,12 +5,6 @@ from datetime import datetime
 from datetime import timedelta
 
 
-class TestApp(unittest.TestCase):
-
-    def test_delete(self):
-        self.assertRaises(NotImplementedError, ap.appointment_delete, 8)
-
-
 class TestModels(unittest.TestCase):
 
     def test_duration(self):
@@ -29,7 +23,7 @@ class TestModels(unittest.TestCase):
             end=now + timedelta(seconds=3600),
             allday=False,
             location='The Office')
-        self.assertNotEqual(1050, app.duration)
+        self.assertNotEqual(1050, app2.duration)
 
     def test_repr(self):
         now = datetime.now()
