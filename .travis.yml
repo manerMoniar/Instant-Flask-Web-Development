@@ -7,5 +7,6 @@ before_script:
   - "flake8 --max-complexity=5 manage.py sched/"
 # command to run tests
 script: 
+  - lettuce tests
   - coverage run --omit="/Library*" unit_test.py
   - nosetests --cover-package=manage,sched --with-doctest --with-coverage --cover-min-percentage=95
