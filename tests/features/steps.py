@@ -9,6 +9,7 @@ import lettuce_webdriver.webdriver
 @before.all
 def setup_browser():
     world.browser = webdriver.Firefox()
+    world.browser.implicitly_wait(10) #wait 10 seconds when doing a find_element before carrying 
 
 
 @step(u'Dado que vaya a "([^"]*)"')
