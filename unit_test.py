@@ -80,7 +80,7 @@ class AppTest(unittest.TestCase):
         self.assertEqual(json.loads(response3.data), {'status': 'Not Found'})
 
 
-class TestModels(unittest.TestCase):
+class ModelsTest(unittest.TestCase):
 
     def test_duration(self):
         now = datetime.now()
