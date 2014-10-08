@@ -14,3 +14,9 @@ def setup_browser():
 @step(u'Dado que vaya a "([^"]*)"')
 def dado_que_vaya_a_lista_citas(step, url):
     world.response = world.browser.get(url)
+
+
+@step(u'Debo ver la "([^"]*)" cita "([^"]*)"')
+def debo_ver_la_cita(step, numero, cita):
+    element = world.browser.find_element_by_css_selector("#main > div.content.container > div > div:nth-child("+numero+") > div > h3 > a")
+    assert element.text == cita
