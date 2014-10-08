@@ -5,6 +5,8 @@ python:
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
+  - sleep 3
+  - "python manage.py runserver"
 install: "pip install -r requirements.txt"
 before_script: 
   - "flake8 --max-complexity=5 manage.py sched/"
@@ -13,5 +15,3 @@ script:
   - lettuce tests
   - coverage run --omit="/Library*" unit_test.py
   - nosetests --cover-package=manage,sched --with-doctest --with-coverage --cover-min-percentage=95
-after_success:
-  - python manage.py runserver
