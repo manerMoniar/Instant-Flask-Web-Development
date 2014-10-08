@@ -73,7 +73,7 @@ def appointment_delete(appointment_id):
     if appt is None:
         # Abort with Not Found, but with simple JSON response.
         response = jsonify({'status': 'Not Found'})
-        response.status = 404
+        response.status = unicode(404)
         return response
     db.session.delete(appt)
     db.session.commit()
