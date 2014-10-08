@@ -8,9 +8,16 @@ import lettuce_webdriver.webdriver
 
 @before.all
 def setup_browser():
-    driver = webdriver.Firefox()
-    driver.get("http://mawd1tic.com/maw/")
-    elem = driver.find_element_by_css_selector("#content > div > div > div:nth-child(3) > div > div > div.span6.plain_text.alignment_left > h1")
-    assert elem.text == "Nuestros Servicios"
-    driver.close() 
+    world.browser = webdriver.Firefox()
+    world.browser.implicitly_wait(10) #wait 10 seconds when doing a find_element before carrying 
 
+
+@step(u'Dado que vaya a "([^"]*)"')
+def dado_que_vaya_a_lista_citas(step, url):
+    world.response = world.browser.get(url)
+
+
+@step(u'Debo ver la "([^"]*)" cita "([^"]*)"')
+def debo_ver_la_cita(step, numero, cita):
+    element = world.browser.find_element_by_css_selector("#main > div.content.container > div > div:nth-child("+numero+") > div > h3 > a")
+    assert element.text == cita
