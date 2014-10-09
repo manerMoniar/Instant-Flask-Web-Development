@@ -3,6 +3,10 @@ from sqlalchemy import Boolean, Column
 from sqlalchemy import DateTime, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
 
+from sqlalchemy.orm import synonym
+from werkzeug import check_password_hash
+from werkzeug import generate_password_hash
+
 Base = declarative_base()
 
 
