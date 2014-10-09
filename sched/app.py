@@ -5,6 +5,10 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from sched.forms import AppointmentForm
 from sched.models import Base, Appointment
 
+from sched import filters
+
+filters.init_app(app)
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sched.db'
 
