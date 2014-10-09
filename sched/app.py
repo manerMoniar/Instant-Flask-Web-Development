@@ -28,6 +28,30 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sched.db'
 db = SQLAlchemy(app)
 db.Model = Base
 
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated():
+        return redirect(url_for('appointment_list'))
+    form = LoginForm(request.form)
+    error = None
+    if request.method == 'POST' and form.validate():
+    email = form.username.data.lower().strip()
+    password = form.password.data.lower().strip()
+    user, authenticated = \
+        User.authenticate(db.session.query, email,password)
+    if authenticated:
+        login_user(user)
+        return redirect(url_for('appointment_list'))
+    else:
+        error = 'Incorrect username or password.'
+    return render_template('user/login.html',
+        form=form, error=error)
+
+@app.route('/logout/')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
 @login_manager.user_loader
 def load_user(user_id):
     """Flask-Login hook to load a User instance from ID."""
