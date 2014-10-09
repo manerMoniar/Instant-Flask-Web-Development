@@ -20,3 +20,7 @@ def do_datetime(dt, format=None):
 	else:
 		formatted = dt.strftime(format)
 	return formatted
+
+def init_app(app):
+	"""Initialize a Flask application with custom filters."""
+	app.jinja_env.filters['datetime'] = do_datetime
