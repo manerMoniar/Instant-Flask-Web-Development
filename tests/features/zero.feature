@@ -9,6 +9,3 @@ Escenario: Ver lista de citas
     Debo ver la "2" cita "Day Off"
     Debo ver la "3" cita "Important Meeting"
     Debo ver la "4" cita "Follow Up"
-
-
-
