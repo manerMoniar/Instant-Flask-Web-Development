@@ -7,6 +7,13 @@ from sqlalchemy.orm import synonym
 from werkzeug import check_password_hash
 from werkzeug import generate_password_hash
 
+from flask import session
+
+# ... in a request ...
+session['spam'] = 'eggs'
+# ... in another request ...
+spam = session.get('spam') # 'eggs'
+
 Base = declarative_base()
 
 class User(Base):
