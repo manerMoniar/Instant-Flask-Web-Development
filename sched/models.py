@@ -12,11 +12,14 @@ Base = declarative_base()
 class User(Base):
     """A user login, with credentials and authentication."""
     __tablename__ = 'user'
-    
+
     id = Column(Integer, primary_key=True)
     created = Column(DateTime, default=datetime.now)
     modified = Column(DateTime, default=datetime.now,
         onupdate=datetime.now)
+    name = Column('name', String(200))
+    email = Column(String(100), unique=True, nullable=False)
+    active = Column(Boolean, default=True)
 
 class Appointment(Base):
 
