@@ -21,6 +21,19 @@ class User(Base):
     email = Column(String(100), unique=True, nullable=False)
     active = Column(Boolean, default=True)
 
+    _password = Column('password', String(100))
+
+    def _get_password(self):
+        return self._password
+
+    def _set_password(self, password):
+        if password:
+         password = password.strip()
+         self._password = generate_password_hash(password)
+         password_descriptor = property(_get_password,_set_password)
+         password = synonym('_password',
+         descriptor=password_descriptor)
+
 class Appointment(Base):
 
     """An appointment on the calendar."""
