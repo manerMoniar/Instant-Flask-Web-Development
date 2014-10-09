@@ -42,6 +42,16 @@ class User(Base):
             return False
         return check_password_hash(self.password, password)
 
+    @classmethod
+    def authenticate(cls, query, email, password):
+    email = email.strip().lower()
+    user = query(cls).filter(cls.email==email).first()
+    if user is None:
+        return None, False
+    if not user.active:
+        return user, False
+    return user, user.check_password(password)
+
 class Appointment(Base):
 
     """An appointment on the calendar."""
