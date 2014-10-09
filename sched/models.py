@@ -34,6 +34,14 @@ class User(Base):
          password = synonym('_password',
          descriptor=password_descriptor)
 
+    def check_password(self, password):
+        if self.password is None:
+            return False
+        password = password.strip()
+        if not password:
+            return False
+        return check_password_hash(self.password, password)
+
 class Appointment(Base):
 
     """An appointment on the calendar."""
