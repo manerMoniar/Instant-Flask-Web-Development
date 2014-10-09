@@ -11,6 +11,9 @@ from flask.ext.login import LoginManager, current_user
 from flask.ext.login import login_user, logout_user
 from sched.models import User
 
+from flask.ext.login import login_required
+
+
 # Use Flask-Login to track current user in Flask's session.
 login_manager = LoginManager()
 login_manager.setup_app(app)
@@ -27,6 +30,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sched.db'
 # SQLAlchemy declarative Base class.
 db = SQLAlchemy(app)
 db.Model = Base
+
+@app.route('/appointments/')
+@login_required
+def appointment_list():
+    # ...
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
