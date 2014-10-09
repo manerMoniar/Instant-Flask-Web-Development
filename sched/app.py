@@ -83,6 +83,9 @@ def appointment_delete(appointment_id):
     db.session.commit()
     return jsonify({'status': 'OK'})
 
+@app.errorhandler(404)
+def error_not_found(error):
+    return render_template('error/not_found.html'), 404
 
 if __name__ == '__main__':  # pragma: no cover
     app.run(debug=True)
