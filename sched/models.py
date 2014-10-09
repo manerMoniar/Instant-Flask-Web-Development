@@ -49,6 +49,18 @@ class User(Base):
             return False
         return check_password_hash(self.password, password)
 
+    def get_id(self):
+        return str(self.id)
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+        
+    def is_authenticated(self):
+        return True
+
     @classmethod
     def authenticate(cls, query, email, password):
     email = email.strip().lower()
@@ -164,3 +176,4 @@ if __name__ == '__main__':  # pragma: no cover
     # Get the first appointment matching the filter query.
     appt = session.query(Appointment).filter(
         Appointment.start <= datetime(2013, 5, 1)).first()
+
