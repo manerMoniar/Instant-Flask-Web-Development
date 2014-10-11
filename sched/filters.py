@@ -12,6 +12,7 @@ def init_app(app):
 
 def do_datetime(dt, format=None):
     """
+    >>> from datetime import datetime
     >>> do_datetime(datetime(2014, 1, 21, 5, 2, 0))
     '2014-01-21 - Tuesday at 5:02am'
     >>> do_datetime(None)
@@ -38,6 +39,7 @@ def do_datetime(dt, format=None):
 
 def do_date(dt, format='%Y-%m-%d - %A'):
     """
+    >>> from datetime import date
     >>> do_date(date(2014, 1, 13))
     '2014-01-13 - Monday'
     >>> do_date(None)
