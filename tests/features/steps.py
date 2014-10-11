@@ -10,10 +10,15 @@ import lettuce_webdriver.webdriver
 def setup_browser():
     world.browser = webdriver.Firefox()
     world.browser.implicitly_wait(10) #wait 10 seconds when doing a find_element before carrying 
-    
+
 @after.all
 def close_browser(total):
     world.browser.quit()
+
+def encontrar_campo_por_clase(browser, attribute):
+    xpath = "//input[@class='%s']" % attribute
+    elems = browser.find_elements_by_xpath(xpath)
+    return elems[0] if elems else False
 
 @step(u'Dado que vaya a "([^"]*)"')
 def dado_que_vaya_a_lista_citas(step, url):
