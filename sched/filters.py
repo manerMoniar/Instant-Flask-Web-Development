@@ -3,6 +3,17 @@
 from jinja2 import Markup, evalcontextfilter, escape
 
 
+def init_app(app):
+    """Initialize a Flask application with filters defined in this module."""
+    app.jinja_env.filters['date'] = do_date
+    app.jinja_env.filters['datetime'] = do_datetime
+    app.jinja_env.filters['duration'] = do_duration
+
+    # The nl2br filter uses the Jinja environment's context to determine
+    # whether to autoescape
+    app.jinja_env.filters['nl2br'] = evalcontextfilter(do_nl2br)
+
+
 def do_datetime(dt, format=None):
     """Jinja template filter to format a datetime object."""
     if dt is None:
@@ -25,17 +36,6 @@ def do_datetime(dt, format=None):
     else:
         formatted = dt.strftime(format)
     return formatted
-
-
-def init_app(app):
-    """Initialize a Flask application with filters defined in this module."""
-    app.jinja_env.filters['date'] = do_date
-    app.jinja_env.filters['datetime'] = do_datetime
-    app.jinja_env.filters['duration'] = do_duration
-
-    # The nl2br filter uses the Jinja environment's context to determine
-    # whether to autoescape
-    app.jinja_env.filters['nl2br'] = evalcontextfilter(do_nl2br)
 
 
 def do_date(dt, format='%Y-%m-%d - %A'):

@@ -1,17 +1,18 @@
+import logging
+
 from flask import Flask
 from flask import abort, jsonify, redirect, render_template, request, url_for
 from flask.ext.login import LoginManager, current_user
 from flask.ext.login import login_user, login_required, logout_user
 from flask.ext.sqlalchemy import SQLAlchemy
 
-from sched import filters
+from sched import config, filters
 from sched.forms import AppointmentForm, LoginForm
 from sched.models import Appointment, Base, User
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sched.db'
-app.secret_key = 'secret_key'
+app.config.from_object(config)
 
 # Use Flask-SQLAlchemy for its engine and session
 # configuration. Load the extension, giving it the app object,
@@ -34,6 +35,12 @@ def load_user(user_id):
 
 
 filters.init_app(app)
+
+
+# Setup logging for production.
+if not app.debug:
+    app.logger.setHandler(logging.StreamHandler()) # Log to stderr.
+    app.logger.setLevel(logging.INFO)
 
 
 @app.errorhandler(404)

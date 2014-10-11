@@ -101,7 +101,7 @@ if __name__ == '__main__':  # pragma: no cover
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
 
-    engine = create_engine('sqlite:///sched.db', echo=True)
+    engine = create_engine('sqlite://', echo=True)
 
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
