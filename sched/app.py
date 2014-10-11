@@ -38,7 +38,7 @@ filters.init_app(app)
 
 
 # Setup logging for production.
-if not app.debug: # pragma: no cover
+if not app.debug:  # pragma: no cover
     app.logger.setHandler(logging.StreamHandler())
     app.logger.setLevel(logging.INFO)
 
@@ -116,7 +116,7 @@ def appointment_delete(appointment_id):
         return response
     if appt.user_id != current_user.id:
         response = jsonify({'status': 'Forbidden'})
-        response.status_code = '403'
+        response.status_code = 403
         return response
     db.session.delete(appt)
     db.session.commit()

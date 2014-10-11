@@ -52,7 +52,7 @@ def do_duration(seconds):
 
 
 def one_many(number, str_duration):
-    return str_duration if number > 1 else str_duration + 's'
+    return str_duration + 's' if number > 1 else str_duration
 
 
 def do_nl2br(context, value):

@@ -11,5 +11,5 @@ before_script:
 # command to run tests
 script: 
   - coverage run --omit="/Library*" unit_test.py
-  - nosetests --cover-package=manage,sched --with-doctest --with-coverage --cover-min-percentage=95
-  - python manage.py runserver
+  - nosetests --cover-package=sched --with-doctest --with-coverage --cover-min-percentage=95
+#  - python manage.py runserver

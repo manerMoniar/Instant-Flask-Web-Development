@@ -114,11 +114,17 @@ if __name__ == '__main__':  # pragma: no cover
     session.commit()
 
     user2 = User(name='Maner',
-                email='maner@mail.com',
-                password='password',
-                active=False)
+                 email='maner@mail.com',
+                 password='password',
+                 active=False)
     session.add(user2)
-    session.commit()    
+    session.commit()
+
+    user3 = User(name='Felipe',
+                 email='felipe@mail.com',
+                 password='password')
+    session.add(user3)
+    session.commit()
 
     now = datetime.now()
 

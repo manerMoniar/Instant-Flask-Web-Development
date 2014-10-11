@@ -1,10 +1,11 @@
 import unittest
-import flask
 import json
 import sched.app as ap
 import sched.models as mod
-from datetime import datetime
+import sched.filters as fil
+from datetime import datetime, date
 from datetime import timedelta
+from jinja2 import Environment
 
 
 class AppTest(unittest.TestCase):
@@ -57,6 +58,7 @@ class AppTest(unittest.TestCase):
 
         response2 = self.app.post("/appointments/4/edit/",
                                   data=dict(
+                                      id=5,
                                       title='Day Off',
                                       start='2014-10-07 23:00:00',
                                       end='2014-10-08 13:00:00',
@@ -68,6 +70,13 @@ class AppTest(unittest.TestCase):
 
         response3 = self.app.get("/appointments/33/edit/")
         self.assertEquals(response3.status_code, 404)
+
+        self.app.get("/logout/")
+        self.app.post('/login/', data=dict(
+            username='felipe@mail.com',
+            password='password'), follow_redirects=True)
+        response4 = self.app.get("/appointments/1/edit/")
+        self.assertEquals(response4.status_code, 403)
 
     def test_delete(self):
         response = self.app.get("/appointments/5/delete/")
@@ -83,6 +92,25 @@ class AppTest(unittest.TestCase):
         self.assertEquals(response3.status_code, 404)
         self.assertEqual(json.loads(response3.data), {'status': 'Not Found'})
 
+        self.app.get("/logout/")
+        self.app.post('/login/', data=dict(
+            username='felipe@mail.com',
+            password='password'), follow_redirects=True)
+        response4 = self.app.delete(
+            "/appointments/1/delete/", follow_redirects=True)
+        self.assertEquals(response4.status_code, 403)
+        self.assertEqual(json.loads(response4.data), {'status': 'Forbidden'})
+
+    def test_login(self):
+        response = self.app.get("/login/", follow_redirects=True)
+        self.assertEquals(response.status_code, 200)
+        assert 'My Appointments' in response.data
+
+        self.app.get("/logout/")
+        response2 = self.app.post('/login/', data=dict(
+            username='maner@mail.com',
+            password='password'), follow_redirects=True)
+        assert 'Incorrect username or password. Try again.' in response2.data
 
 
 class ModelsTest(unittest.TestCase):
@@ -137,22 +165,22 @@ class ModelsTest(unittest.TestCase):
                         email='admin@mail.com')
         self.assertEqual(True, user.is_active())
         self.assertNotEqual(False, user.is_active())
-        
+
     def test_is_anonymous(self):
         user = mod.User(name='Administrator',
-                email='admin@mail.com')
+                        email='admin@mail.com')
         self.assertEqual(False, user.is_anonymous())
         self.assertNotEqual(True, user.is_anonymous())
 
     def test_is_authenticated(self):
         user = mod.User(name='Administrator',
-                email='admin@mail.com')
+                        email='admin@mail.com')
         self.assertEqual(True, user.is_authenticated())
         self.assertNotEqual(False, user.is_authenticated())
 
     def test__repr__(self):
         user = mod.User(id=25, name='Administrator',
-                email='admin@mail.com')
+                        email='admin@mail.com')
         self.assertEqual('<User: 25>', user.__repr__())
         self.assertNotEqual('<User: 22>', user.__repr__())
 
@@ -186,75 +214,51 @@ class ModelsTest(unittest.TestCase):
         self.assertEqual('<Appointment: 23>', app.__repr__())
         self.assertNotEqual('<Appointment: 22>', app.__repr__())
 
-"""
-class test_filter(unittest.TestCase):
 
-    def test_datetime_without_hour(self):
+class FiltersTest(unittest.TestCase):
+
+    def test_do_datetime(self):
+        now = datetime(2010, 11, 11, 15, 12, 0)
+        date_filter = fil.do_datetime(now)
+        self.assertEqual('2010-11-11 - Thursday at 3:12pm', date_filter)
+        self.assertNotEqual('2010-11-12 - Thursday at 3:12pm', date_filter)
+
+        date_filter2 = fil.do_datetime(None)
+        self.assertEqual('', date_filter2)
+
+        now = datetime(2010, 11, 11, 15, 12, 0)
+        format = '%d-%m-%Y'
+        date_filter3 = fil.do_datetime(now, format)
+        self.assertEqual('11-11-2010', date_filter3)
+
+    def test_do_date(self):
         now = date(2010, 11, 11)
-        fecha = filters.do_datetime(now)
-        self.assertNotEqual(fecha, "2010-11-11 - Thursday")
+        date_filter = fil.do_date(now)
+        self.assertEqual('2010-11-11 - Thursday', date_filter)
+        self.assertNotEqual('2010-11-12 - Thursday', date_filter)
 
-    def test_datetime_with_hour(self):
-        now = datetime(2010, 11, 11, 13, 00, 00)
-        fecha = filters.do_datetime(now)
-        self.assertEqual(fecha, '2010-11-11 - Thursday at 1:00pm')
+        date_filter2 = fil.do_date(None)
+        self.assertEqual('', date_filter2)
 
-    def test_datetime_None(self):
-        fecha = filters.do_datetime(None)
-        self.assertNotEqual(fecha, "Today")
-        self.assertEqual(fecha, '')
-
-    def test_datetime_format_None(self):
-        now = datetime(2010, 11, 11, 14, 00, 00)
-        fecha = filters.do_datetime(now, None)
-        self.assertEqual(fecha, '2010-11-11 - Thursday at 2:00pm')
-
-    def test_datetime_with_format(self):
-        a = '%Y-%m-%d - %A'
-        now = datetime(2010, 11, 11, 14, 00, 00)
-        fecha = filters.do_datetime(now, a)
-        self.assertNotEqual(fecha, '2010-11-11 - Thursday at 2:00pm')
-
-    def test_date_none(self):
-        fechadate = filters.do_date(None)
-        self.assertEqual(fechadate, '')
-
-    def test_date_not_none(self):
-        now = datetime(2010, 11, 11, 13, 00, 00)
-        fechadate = filters.do_date(now)
-        self.assertNotEqual(fechadate, '2010-11-11 - Thursday at 1:00pm')
-        self.assertEqual(fechadate, '2010-11-11 - Thursday')
-
-    def test_duration_hour(self):
-        time = filters.do_duration(3600)
-        self.assertNotEqual(time, "1 day")
-        self.assertEqual(time, "0 day, 1 hour, 0 minute, 0 second")
-
-    def test_duration_days(self):
-        time = filters.do_duration(258732)
-        self.assertEqual(time, "2 days, 23 hours, 52 minutes, 12 seconds")
-
-    def test_do_nl2br_without_Markup(self):
-        template_env = Environment(
-            autoescape=False,
-         extensions=['jinja2.ext.i18n', 'jinja2.ext.autoescape'])
-        text = "Texto con '\n' para saltos '\n' pero junto"
-        changes = filters.do_nl2br(template_env, text)
-        self.assertNotEqual(changes, "")
-        self.assertEqual(
-            changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero junto")
-
-    def test_do_nl2br_with_Markup(self):
-        template_env = Environment(
-            autoescape=True,
-         extensions=['jinja2.ext.i18n', 'jinja2.ext.autoescape'])
-        text = "Texto con '\n' para saltos '\n' pero <script>junto</script>"
-        changes = filters.do_nl2br(template_env, text)
+    def test_do_duration(self):
+        time_filter = fil.do_duration(5000)
+        self.assertEqual("0 day, 1 hour, 0 minutes, 0 seconds", time_filter)
         self.assertNotEqual(
-            changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero junto")
-        self.assertEqual(
-            changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero &lt;script&gt;junto&lt;/script&gt;")
-"""
+            "0 day, 1 hour, 0 minutes, 10 seconds", time_filter)
+
+    def test_one_many(self):
+        result = fil.one_many(2, '{d} day')
+        self.assertEqual('{d} days', result)
+        self.assertNotEqual('{d} day', result)
+
+    def test_do_nl2br(self):
+        value = 'Learning Flask\n Web Framework'
+        context = Environment(
+            extensions=['jinja2.ext.i18n', 'jinja2.ext.autoescape'],
+            autoescape=True)
+        result = fil.do_nl2br(context, value)
+        self.assertEqual('Learning Flask<br /> Web Framework', result)
+        self.assertNotEqual("Learning Flask Web Framework", result)
 
 if __name__ == '__main__':
     unittest.main()
