@@ -1,29 +1,22 @@
 from datetime import datetime
-from sqlalchemy import Boolean, Column
-from sqlalchemy import DateTime, Integer, String, Text
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Boolean, DateTime, Integer, String, Text
+from sqlalchemy.orm import relationship, synonym
 from sqlalchemy.ext.declarative import declarative_base
+from werkzeug import check_password_hash, generate_password_hash
 
-from sqlalchemy.orm import synonym
-from werkzeug import check_password_hash
-from werkzeug import generate_password_hash
-
-from flask import session
-
-# ... in a request ...
-session['spam'] = 'eggs'
-# ... in another request ...
-spam = session.get('spam') # 'eggs'
 
 Base = declarative_base()
 
+
 class User(Base):
+
     """A user login, with credentials and authentication."""
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
     created = Column(DateTime, default=datetime.now)
-    modified = Column(DateTime, default=datetime.now,
-        onupdate=datetime.now)
+    modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     name = Column('name', String(200))
     email = Column(String(100), unique=True, nullable=False)
     active = Column(Boolean, default=True)
@@ -35,11 +28,11 @@ class User(Base):
 
     def _set_password(self, password):
         if password:
-         password = password.strip()
-         self._password = generate_password_hash(password)
-         password_descriptor = property(_get_password,_set_password)
-         password = synonym('_password',
-         descriptor=password_descriptor)
+            password = password.strip()
+            self._password = generate_password_hash(password)
+
+    password_descriptor = property(_get_password, _set_password)
+    password = synonym('_password', descriptor=password_descriptor)
 
     def check_password(self, password):
         if self.password is None:
@@ -49,6 +42,16 @@ class User(Base):
             return False
         return check_password_hash(self.password, password)
 
+    @classmethod
+    def authenticate(cls, query, email, password):
+        email = email.strip().lower()
+        user = query(cls).filter(cls.email == email).first()
+        if user is None:
+            return None, False
+        if not user.active:
+            return user, False
+        return user, user.check_password(password)
+
     def get_id(self):
         return str(self.id)
 
@@ -57,19 +60,13 @@ class User(Base):
 
     def is_anonymous(self):
         return False
-        
+
     def is_authenticated(self):
         return True
 
-    @classmethod
-    def authenticate(cls, query, email, password):
-    email = email.strip().lower()
-    user = query(cls).filter(cls.email==email).first()
-    if user is None:
-        return None, False
-    if not user.active:
-        return user, False
-    return user, user.check_password(password)
+    def __repr__(self):
+        return u'<{self.__class__.__name__}: {self.id}>'.format(self=self)
+
 
 class Appointment(Base):
 
@@ -79,6 +76,10 @@ class Appointment(Base):
     id = Column(Integer, primary_key=True)
     created = Column(DateTime, default=datetime.now)
     modified = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user = relationship(User, lazy='joined', join_depth=1, viewonly=True)
+
     title = Column(String(255))
     start = Column(DateTime, nullable=False)
     end = Column(DateTime, nullable=False)
@@ -106,9 +107,16 @@ if __name__ == '__main__':  # pragma: no cover
     Session = sessionmaker(bind=engine)
     session = Session()
 
+    user = User(name='Administrator',
+                email='admin@mail.com',
+                password='pass')
+    session.add(user)
+    session.commit()
+
     now = datetime.now()
 
     session.add(Appointment(
+        user_id=user.id,
         title='Important Meeting',
         start=now + timedelta(days=3),
         end=now + timedelta(days=3, seconds=3600),
@@ -117,6 +125,7 @@ if __name__ == '__main__':  # pragma: no cover
     session.commit()
 
     session.add(Appointment(
+        user_id=user.id,
         title='Past Meeting',
         start=now - timedelta(days=3),
         end=now - timedelta(days=3, seconds=3600),
@@ -125,6 +134,7 @@ if __name__ == '__main__':  # pragma: no cover
     session.commit()
 
     session.add(Appointment(
+        user_id=user.id,
         title='Follow Up',
         start=now + timedelta(days=4),
         end=now + timedelta(days=4, seconds=3600),
@@ -133,6 +143,7 @@ if __name__ == '__main__':  # pragma: no cover
     session.commit()
 
     session.add(Appointment(
+        user_id=user.id,
         title='Day Off',
         start=now + timedelta(days=5),
         end=now + timedelta(days=5),
@@ -141,6 +152,7 @@ if __name__ == '__main__':  # pragma: no cover
 
     # Create. Add a new model instance to the session.
     appt = Appointment(
+        user_id=user.id,
         title='My Appointment',
         start=now,
         end=now + timedelta(seconds=1800),
@@ -176,4 +188,3 @@ if __name__ == '__main__':  # pragma: no cover
     # Get the first appointment matching the filter query.
     appt = session.query(Appointment).filter(
         Appointment.start <= datetime(2013, 5, 1)).first()
-
