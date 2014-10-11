@@ -12,18 +12,20 @@ from flask import session
 # ... in a request ...
 session['spam'] = 'eggs'
 # ... in another request ...
-spam = session.get('spam') # 'eggs'
+spam = session.get('spam')  # 'eggs'
 
 Base = declarative_base()
 
+
 class User(Base):
+
     """A user login, with credentials and authentication."""
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
     created = Column(DateTime, default=datetime.now)
     modified = Column(DateTime, default=datetime.now,
-        onupdate=datetime.now)
+                      onupdate=datetime.now)
     name = Column('name', String(200))
     email = Column(String(100), unique=True, nullable=False)
     active = Column(Boolean, default=True)
@@ -35,11 +37,11 @@ class User(Base):
 
     def _set_password(self, password):
         if password:
-         password = password.strip()
-         self._password = generate_password_hash(password)
-         password_descriptor = property(_get_password,_set_password)
-         password = synonym('_password',
-         descriptor=password_descriptor)
+            password = password.strip()
+            self._password = generate_password_hash(password)
+            password_descriptor = property(_get_password, _set_password)
+            password = synonym('_password',
+                               descriptor=password_descriptor)
 
     def check_password(self, password):
         if self.password is None:
@@ -57,19 +59,20 @@ class User(Base):
 
     def is_anonymous(self):
         return False
-        
+
     def is_authenticated(self):
         return True
 
     @classmethod
     def authenticate(cls, query, email, password):
     email = email.strip().lower()
-    user = query(cls).filter(cls.email==email).first()
+    user = query(cls).filter(cls.email == email).first()
     if user is None:
         return None, False
     if not user.active:
         return user, False
     return user, user.check_password(password)
+
 
 class Appointment(Base):
 
@@ -176,4 +179,3 @@ if __name__ == '__main__':  # pragma: no cover
     # Get the first appointment matching the filter query.
     appt = session.query(Appointment).filter(
         Appointment.start <= datetime(2013, 5, 1)).first()
-

@@ -31,10 +31,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sched.db'
 db = SQLAlchemy(app)
 db.Model = Base
 
+
 @app.route('/appointments/')
 @login_required
 def appointment_list():
     # ...
+
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
@@ -46,24 +48,27 @@ def login():
     email = form.username.data.lower().strip()
     password = form.password.data.lower().strip()
     user, authenticated = \
-        User.authenticate(db.session.query, email,password)
+        User.authenticate(db.session.query, email, password)
     if authenticated:
         login_user(user)
         return redirect(url_for('appointment_list'))
     else:
         error = 'Incorrect username or password.'
     return render_template('user/login.html',
-        form=form, error=error)
+                           form=form, error=error)
+
 
 @app.route('/logout/')
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
+
 @login_manager.user_loader
 def load_user(user_id):
     """Flask-Login hook to load a User instance from ID."""
     return db.session.query(User).get(user_id)
+
 
 @app.route('/appointments/')
 def appointment_list():
@@ -127,6 +132,7 @@ def appointment_delete(appointment_id):
     db.session.delete(appt)
     db.session.commit()
     return jsonify({'status': 'OK'})
+
 
 @app.errorhandler(404)
 def error_not_found(error):

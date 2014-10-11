@@ -112,6 +112,7 @@ class ModelsTest(unittest.TestCase):
         self.assertEqual('<Appointment: 23>', app.__repr__())
         self.assertNotEqual('<Appointment: 22>', app.__repr__())
 
+
 class test_filter(unittest.TestCase):
 
     def test_datetime_without_hour(self):
@@ -128,7 +129,6 @@ class test_filter(unittest.TestCase):
         fecha = filters.do_datetime(None)
         self.assertNotEqual(fecha, "Today")
         self.assertEqual(fecha, '')
-
 
     def test_datetime_format_None(self):
         now = datetime(2010, 11, 11, 14, 00, 00)
@@ -160,24 +160,27 @@ class test_filter(unittest.TestCase):
         time = filters.do_duration(258732)
         self.assertEqual(time, "2 days, 23 hours, 52 minutes, 12 seconds")
 
-
     def test_do_nl2br_without_Markup(self):
         template_env = Environment(
-          autoescape=False,
+            autoescape=False,
          extensions=['jinja2.ext.i18n', 'jinja2.ext.autoescape'])
         text = "Texto con '\n' para saltos '\n' pero junto"
         changes = filters.do_nl2br(template_env, text)
         self.assertNotEqual(changes, "")
-        self.assertEqual(changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero junto")
+        self.assertEqual(
+            changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero junto")
 
     def test_do_nl2br_with_Markup(self):
         template_env = Environment(
-          autoescape=True,
+            autoescape=True,
          extensions=['jinja2.ext.i18n', 'jinja2.ext.autoescape'])
         text = "Texto con '\n' para saltos '\n' pero <script>junto</script>"
         changes = filters.do_nl2br(template_env, text)
-        self.assertNotEqual(changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero junto")
-        self.assertEqual(changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero &lt;script&gt;junto&lt;/script&gt;")
+        self.assertNotEqual(
+            changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero junto")
+        self.assertEqual(
+            changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero &lt;script&gt;junto&lt;/script&gt;")
+
 
 class testDelete(unittest.TestCase):
     pass

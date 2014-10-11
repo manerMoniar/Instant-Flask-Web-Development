@@ -2,6 +2,7 @@
 
 from jinja2 import Markup, evalcontextfilter, escape
 
+
 def do_datetime(dt, format=None):
 	"""Jinja template filter to format a datetime object."""
 	if dt is None:
@@ -13,7 +14,7 @@ def do_datetime(dt, format=None):
 		# No format is given in the template call.
 		# Use a default format.
 		#
-		# Format time in its own strftime call in order to:	
+		# Format time in its own strftime call in order to:
 		# 1. Left-strip leading 0 in hour display.
 		# 2. Use 'am'/'pm' (lower case) instead of 'AM'/'PM'.
 		formatted_date = dt.strftime('%Y-%m-%d - %A')
@@ -24,6 +25,7 @@ def do_datetime(dt, format=None):
 	else:
 		formatted = dt.strftime(format)
 	return formatted
+
 
 def init_app(app):
 	"""Initialize a Flask application with filters defined in this module."""
