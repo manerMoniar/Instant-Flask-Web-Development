@@ -39,3 +39,10 @@ def y_enviare_el_formulario(step):
 def debo_ver_la_cita(step, numero, cita): 
     element = world.browser.find_element_by_css_selector("#main > div.content.container > div > div:nth-child("+numero+") > div > h3 > a")
     assert element.text == cita
+
+
+@step('Debo ver que el elemento con clase "(.*?)" contiene "(.*?)"')
+def elemento_contiene(step, element_class, value):
+    with AssertContextManager(step):
+        element = world.browser.find_element_by_class_name(element_class)
+        assert (value in element.text), "Got %s, %s " % (element.text, value)
