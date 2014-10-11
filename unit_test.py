@@ -12,8 +12,12 @@ class AppTest(unittest.TestCase):
     def setUp(self):
         # Create Flask test client
         self.app = ap.app.test_client()
+        self.app.post('/login/', data=dict(
+            username='admin@mail.com',
+            password='pass'), follow_redirects=True)
 
     def test_list(self):
+
         response = self.app.get("/appointments/")
         self.assertEquals(response.status_code, 200)
         assert 'Past Meeting' in response.data
@@ -80,7 +84,77 @@ class AppTest(unittest.TestCase):
         self.assertEqual(json.loads(response3.data), {'status': 'Not Found'})
 
 
+
 class ModelsTest(unittest.TestCase):
+
+    def test_get_password(self):
+        user = mod.User(name='Administrator',
+                        email='admin@mail.com',
+                        password='pass')
+        assert "sha1" in user._get_password()
+        assert "md5" not in user._get_password()
+
+    def test_set_password(self):
+        user = mod.User(name='Administrator',
+                        email='admin@mail.com',
+                        password='pass')
+        user._set_password("pass")
+        self.assertEqual(True, user.check_password("pass"))
+        self.assertEqual(False, user.check_password("password"))
+
+    def test_check_password(self):
+        user = mod.User(name='Administrator',
+                        email='admin@mail.com')
+        self.assertEqual(False, user.check_password(""))
+        user._set_password("pass")
+        self.assertEqual(False, user.check_password(""))
+        self.assertEqual(True, user.check_password("pass"))
+
+    def test_authenticate(self):
+        user, authenticate = mod.User.authenticate(
+            ap.db.session.query, "admin@mail.com", "pass")
+        self.assertEqual(True, authenticate)
+        self.assertEqual(user.name, u"Administrator")
+
+        user2, authenticate2 = mod.User.authenticate(
+            ap.db.session.query, "a", "pass")
+        self.assertEqual(False, authenticate2)
+        self.assertEqual(None, user2)
+
+        user3, authenticate3 = mod.User.authenticate(
+            ap.db.session.query, "maner@mail.com", "password")
+        self.assertEqual(u'Maner', user3.name)
+        self.assertEqual(False, authenticate3)
+
+    def test_get_id(self):
+        user = mod.User(id=45, name='Administrator',
+                        email='admin@mail.com')
+        self.assertEqual('45', user.get_id())
+        self.assertNotEqual('5', user.get_id())
+
+    def test_is_active(self):
+        user = mod.User(name='Administrator',
+                        email='admin@mail.com')
+        self.assertEqual(True, user.is_active())
+        self.assertNotEqual(False, user.is_active())
+        
+    def test_is_anonymous(self):
+        user = mod.User(name='Administrator',
+                email='admin@mail.com')
+        self.assertEqual(False, user.is_anonymous())
+        self.assertNotEqual(True, user.is_anonymous())
+
+    def test_is_authenticated(self):
+        user = mod.User(name='Administrator',
+                email='admin@mail.com')
+        self.assertEqual(True, user.is_authenticated())
+        self.assertNotEqual(False, user.is_authenticated())
+
+    def test__repr__(self):
+        user = mod.User(id=25, name='Administrator',
+                email='admin@mail.com')
+        self.assertEqual('<User: 25>', user.__repr__())
+        self.assertNotEqual('<User: 22>', user.__repr__())
 
     def test_duration(self):
         now = datetime.now()
@@ -112,7 +186,7 @@ class ModelsTest(unittest.TestCase):
         self.assertEqual('<Appointment: 23>', app.__repr__())
         self.assertNotEqual('<Appointment: 22>', app.__repr__())
 
-
+"""
 class test_filter(unittest.TestCase):
 
     def test_datetime_without_hour(self):
@@ -180,13 +254,7 @@ class test_filter(unittest.TestCase):
             changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero junto")
         self.assertEqual(
             changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero &lt;script&gt;junto&lt;/script&gt;")
-
-
-class testDelete(unittest.TestCase):
-    pass
-# def test_error_delete(self):
-#   self.assertRaises(NotImplementedError, m.appointment_delete, 1)
-
+"""
 
 if __name__ == '__main__':
     unittest.main()

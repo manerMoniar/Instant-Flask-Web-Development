@@ -38,8 +38,8 @@ filters.init_app(app)
 
 
 # Setup logging for production.
-if not app.debug:
-    app.logger.setHandler(logging.StreamHandler())  # Log to stderr.
+if not app.debug: # pragma: no cover
+    app.logger.setHandler(logging.StreamHandler())
     app.logger.setLevel(logging.INFO)
 
 
@@ -112,7 +112,7 @@ def appointment_delete(appointment_id):
     appt = db.session.query(Appointment).get(appointment_id)
     if appt is None:
         response = jsonify({'status': 'Not Found'})
-        response.status_code = '404'
+        response.status_code = 404
         return response
     if appt.user_id != current_user.id:
         response = jsonify({'status': 'Forbidden'})

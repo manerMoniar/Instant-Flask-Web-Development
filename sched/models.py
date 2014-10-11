@@ -65,7 +65,7 @@ class User(Base):
         return True
 
     def __repr__(self):
-        return u'<{self.__class__.__name__}: {self.id}>'.format(self=self)
+        return ('<{self.__class__.__name__}: {self.id}>'.format(self=self))
 
 
 class Appointment(Base):
@@ -112,6 +112,13 @@ if __name__ == '__main__':  # pragma: no cover
                 password='pass')
     session.add(user)
     session.commit()
+
+    user2 = User(name='Maner',
+                email='maner@mail.com',
+                password='password',
+                active=False)
+    session.add(user2)
+    session.commit()    
 
     now = datetime.now()
 

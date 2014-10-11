@@ -42,24 +42,17 @@ def do_duration(seconds):
     h, m = divmod(m, 60)
     d, h = divmod(h, 24)
     tokens = []
-    if d > 1:
-        tokens.append('{d} days')
-    elif d:
-        tokens.append('{d} day')
-    if h > 1:
-        tokens.append('{h} hours')
-    elif h:
-        tokens.append('{h} hour')
-    if m > 1:
-        tokens.append('{m} minutes')
-    elif m:
-        tokens.append('{m} minute')
-    if s > 1:
-        tokens.append('{s} seconds')
-    elif s:
-        tokens.append('{s} second')
+    tokens.append(one_many(d, '{d} day'))
+    tokens.append(one_many(h, '{h} hour'))
+    tokens.append(one_many(m, '{d} minute'))
+    tokens.append(one_many(s, '{d} second'))
     template = ', '.join(tokens)
+
     return template.format(d=d, h=h, m=m, s=s)
+
+
+def one_many(number, str_duration):
+    return str_duration if number > 1 else str_duration + 's'
 
 
 def do_nl2br(context, value):
