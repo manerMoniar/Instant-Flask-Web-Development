@@ -10,5 +10,4 @@ before_script:
   - "flake8 manage.py sched/"
 # command to run tests
 script: 
-  - nosetests --cover-package=manage,sched --with-doctest --with-coverage --cover-min-percentage=95
   - python manage.py runserver & lettuce tests
