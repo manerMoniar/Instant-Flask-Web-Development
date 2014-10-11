@@ -15,17 +15,27 @@ def setup_browser():
 def close_browser(total):
     world.browser.quit()
 
-def encontrar_campo_por_clase(browser, attribute):
-    xpath = "//input[@class='%s']" % attribute
-    elems = browser.find_elements_by_xpath(xpath)
-    return elems[0] if elems else False
 
 @step(u'Dado que vaya a "([^"]*)"')
 def dado_que_vaya_a_lista_citas(step, url):
     world.response = world.browser.get(url)
 
 
+@step(u'Debo llenar el campo "([^"]*)" con "([^"]*)"')
+def debo_llenar_el_usuario_y_contrasenia(step, id, value):
+    text_field = world.browser.find_element_by_id(id)
+    text_field.clear()
+    text_field.send_keys(value)
+
+
+@step(u'Y enviare el formulario')
+def y_enviare_el_formulario(step):
+    with AssertContextManager(step):
+        form = world.browser.find_element_by_tag_name('form')
+        form.submit()
+
+
 @step(u'Debo ver la "([^"]*)" cita "([^"]*)"')
-def debo_ver_la_cita(step, numero, cita):
+def debo_ver_la_cita(step, numero, cita): 
     element = world.browser.find_element_by_css_selector("#main > div.content.container > div > div:nth-child("+numero+") > div > h3 > a")
     assert element.text == cita
