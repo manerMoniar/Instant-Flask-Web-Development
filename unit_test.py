@@ -113,7 +113,7 @@ class ModelsTest(unittest.TestCase):
         self.assertNotEqual('<Appointment: 22>', app.__repr__())
 
 class test_filter(unittest.TestCase):
-    
+
     def test_datetime_without_hour(self):
         now = date(2010, 11, 11)
         fecha = filters.do_datetime(now)
@@ -178,7 +178,11 @@ class test_filter(unittest.TestCase):
         changes = filters.do_nl2br(template_env, text)
         self.assertNotEqual(changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero junto")
         self.assertEqual(changes, "Texto con &#39;<br />&#39; para saltos &#39;<br />&#39; pero &lt;script&gt;junto&lt;/script&gt;")
-  
+
+class testDelete(unittest.TestCase):
+    pass
+# def test_error_delete(self):
+#   self.assertRaises(NotImplementedError, m.appointment_delete, 1)
 
 
 if __name__ == '__main__':
