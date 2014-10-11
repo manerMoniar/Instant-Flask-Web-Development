@@ -1,5 +1,5 @@
 from jinja2 import Markup, evalcontextfilter, escape
-
+from datetime import datetime, date
 
 def init_app(app):
     app.jinja_env.filters['date'] = do_date
@@ -12,6 +12,14 @@ def init_app(app):
 
 
 def do_datetime(dt, format=None):
+    """
+    >>> do_datetime(datetime(2014, 1, 21, 5, 2, 0))
+    '2014-01-21 - Tuesday at 5:02am'
+    >>> do_datetime(None) 
+    ''
+    >>> do_datetime(datetime(2014, 1, 21, 5, 2, 0), '%d-%m-%Y')
+    '21-01-2014'
+    """
     if dt is None:
         # By default, render an empty string.
         return ''
@@ -30,6 +38,12 @@ def do_datetime(dt, format=None):
 
 
 def do_date(dt, format='%Y-%m-%d - %A'):
+    """
+    >>> do_date(date(2014, 1, 13))
+    '2014-01-13 - Monday'
+    >>> do_date(None)
+    ''
+    """
     if dt is None:
         return ''
     # Only difference with do_datetime is the default format, but that is
@@ -38,6 +52,10 @@ def do_date(dt, format='%Y-%m-%d - %A'):
 
 
 def do_duration(seconds):
+    """
+    >>> do_duration(8000)
+    '0 day, 2 hours, 0 minutes, 0 seconds'
+    """
     m, s = divmod(seconds, 60)
     h, m = divmod(m, 60)
     d, h = divmod(h, 24)
@@ -52,6 +70,12 @@ def do_duration(seconds):
 
 
 def one_many(number, str_duration):
+    """
+    >>> one_many(1, '{d} day')
+    '{d} day'
+    >>> one_many(2, '{d} day')
+    '{d} days'
+    """
     return str_duration + 's' if number > 1 else str_duration
 
 
