@@ -54,7 +54,7 @@ def debo_ver_titulo(step, title):
         assert title == element.text, "Got %s " % element.text
 
 @step('Debo hacer clic en el boton"([^"]*)"')
-def debo_hacer_clic_en_el_boton(step, field_class):
+def debo_hacer_clic_en_boton(step, field_class):
     with AssertContextManager(step):
         button = world.browser.find_element_by_class_name(field_class)
         button.click()
