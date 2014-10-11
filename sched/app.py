@@ -39,7 +39,7 @@ filters.init_app(app)
 
 # Setup logging for production.
 if not app.debug:
-    app.logger.setHandler(logging.StreamHandler()) # Log to stderr.
+    app.logger.setHandler(logging.StreamHandler())  # Log to stderr.
     app.logger.setLevel(logging.INFO)
 
 
