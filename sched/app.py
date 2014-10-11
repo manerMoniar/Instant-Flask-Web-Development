@@ -84,15 +84,19 @@ def appointment_create():
     return render_template('appointment/edit.html', form=form)
 
 
+def manage_errors(appt):
+    if appt is None:
+        abort(404)
+    if appt.user_id != current_user.id:
+        abort(403)
+
+
 @app.route('/appointments/<int:appointment_id>/edit/', methods=['GET', 'POST'])
 @login_required
 def appointment_edit(appointment_id):
     """Provide HTML form to edit a given appointment."""
     appt = db.session.query(Appointment).get(appointment_id)
-    if appt is None:
-        abort(404)
-    if appt.user_id != current_user.id:
-        abort(403)
+    manage_errors(appt)
     form = AppointmentForm(request.form, appt)
     if request.method == 'POST' and form.validate():
         form.populate_obj(appt)
@@ -119,10 +123,15 @@ def appointment_delete(appointment_id):
     return jsonify({'status': 'OK'})
 
 
-@app.route('/login/', methods=['GET', 'POST'])
-def login():
+def is_authenticated():
     if current_user.is_authenticated():
         return redirect(url_for('appointment_list'))
+
+
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+    is_authenticated()
+
     form = LoginForm(request.form)
     error = None
     if request.method == 'POST' and form.validate():
