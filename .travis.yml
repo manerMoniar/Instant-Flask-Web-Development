@@ -7,7 +7,9 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 install: "pip install -r requirements.txt"
 before_script: 
-  - "flake8 manage.py sched/"
+  - "flake8 --max-complexity=5 sched/"
 # command to run tests
 script: 
-  - python manage.py runserver & lettuce tests
+  - coverage run --omit="/Library*" unit_test.py
+  - nosetests --cover-package=manage,sched --with-doctest --with-coverage --cover-min-percentage=95
+  - python manage.py runserver
