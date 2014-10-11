@@ -1,5 +1,6 @@
 from jinja2 import Markup, evalcontextfilter, escape
 
+
 def init_app(app):
     app.jinja_env.filters['date'] = do_date
     app.jinja_env.filters['datetime'] = do_datetime
