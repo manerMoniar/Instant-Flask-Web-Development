@@ -27,7 +27,7 @@ Escenario: Crear un appoitment
 
 Escenario: Consultar un appoitment
 	Dado que vaya a "http://127.0.0.1:5000/appointments/2/"
-	Debo ver que el elemento con clase "appointment-detail" contiene "My Appointment"
+	Debo ver que el elemento con clase "appointment-detail" contiene "Past Meeting"
 
 Escenario: Consultar un appoitment que no existe
 	Dado que vaya a "http://127.0.0.1:5000/appointments/0/"
