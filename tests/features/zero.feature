@@ -23,7 +23,7 @@ Escenario: Crear un appoitment
 	Debo llenar el campo "end" con "2010-11-11 13:00:00"
 	Debo llenar el campo "location" con "Av. Universidad, Guadalupe, Zac."
 	Debo llenar el campo "description" con "Cita urgente!!!"
-	y enviare el formulario
+	Y enviare el formulario
 
 Escenario: Consultar un appoitment
 	Dado que vaya a "http://127.0.0.1:5000/appointments/2/"
@@ -36,13 +36,13 @@ Escenario: Consultar un appoitment que no existe
 Escenario: Editar un appoitment
 	Dado que vaya a "http://127.0.0.1:5000/appointments/1/edit"
 	Debo llenar el campo "title" con "Nuevo Titulo"
-	y enviare el formulario
+	Y enviare el formulario
 	Debo ver que el elemento con clase "appointment-detail" contiene "Nuevo Titulo"
 
 Escenario: Editar la fecha de un appoitment
 	Dado que vaya a "http://127.0.0.1:5000/appointments/1/edit"
 	Debo llenar el campo con id "start" con una "fecha actual"
-	y enviare el formulario
+	Y enviare el formulario
 
 Escenario: Eliminar un appoitment
 	Dado que vaya a "http://127.0.0.1:5000/appointments/"

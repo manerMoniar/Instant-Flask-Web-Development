@@ -28,7 +28,7 @@ def debo_llenar_el_usuario_y_contrasenia(step, id, value):
     text_field.send_keys(value)
 
 
-@step(u'y_enviare_el_formulario enviare el formulario')
+@step(u'y enviare el formulario')
 def y_enviare_el_formulario(step):
     with AssertContextManager(step):
         form = world.browser.find_element_by_tag_name('form')
