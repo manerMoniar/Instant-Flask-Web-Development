@@ -77,19 +77,3 @@ def then_the_element_with_the_class_not_contains(step, element_class, title):
             lst.append(e.text)
 
         assert title not in lst
-
-@step(u'Debo llenar el campo con id "([^"]*)" con una fecha actual')
-def debo_llenar_el_campo_con_id_group1_con_una_fecha_actual(step, group1):
-    assert False, 'This step must be implemented'
-
-@step(u'Debo seleccionar el appoitment con el titulo "([^"]*)"')
-def debo_seleccionar_el_appoitment_con_el_titulo_group1(step, group1):
-    assert False, 'This step must be implemented'
-
-@step(u'Debo hacer clic en el boton "([^"]*)"')
-def debo_hacer_clic_en_el_boton_group1(step, group1):
-    assert False, 'This step must be implemented'
-
-@step(u'Debo ver que el elemento con la clase "([^"]*)" no contiene "([^"]*)"')
-def debo_ver_que_el_elemento_con_la_clase_group1_no_contiene_group2(step, group1, group2):
-    assert False, 'This step must be implemented'
