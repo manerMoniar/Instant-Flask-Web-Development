@@ -71,6 +71,12 @@ def Debo_llenar_el_campo_con_id(step, field_id):
         text_field.clear()
         text_field.send_keys(fechaActual)
 
+step('Debo seleccionar el appoitment con el titulo "([^"]*)"')
+def Debo_seleccionar_el_appointment_con_el_titulo(step, title):
+    with AssertContextManager(step):
+        element = world.browser.find_element_by_link_text(title)
+        element.click()
+
 @step('Debo ver que el elemento con clase "(.*?)" no contiene "(.*?)"')
 def Debo_ver_que_el_elemento_con_clase(step, element_class, title):
     with AssertContextManager(step):
