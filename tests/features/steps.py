@@ -28,7 +28,7 @@ def debo_llenar_el_usuario_y_contrasenia(step, id, value):
     text_field.send_keys(value)
 
 
-@step(u'y enviare el formulario')
+@step(u'Y enviare el formulario')
 def y_enviare_el_formulario(step):
     with AssertContextManager(step):
         form = world.browser.find_element_by_tag_name('form')
@@ -58,6 +58,13 @@ def debo_hacer_clic_en_boton(step, field_class):
     with AssertContextManager(step):
         button = world.browser.find_element_by_class_name(field_class)
         button.click()
+
+@step('Debo llenar el campo con id "([^"]*)" con fecha actual')
+def when_i_update_with_actual_date(step, field_id):
+    with AssertContextManager(step):
+        text_field = world.browser.find_element_by_id(field_id)
+        text_field.clear()
+        text_field.send_keys(fechaActual)
 
 @step('Debo ver que el elemento con clase "(.*?)" no contiene "(.*?)"')
 def then_the_element_with_the_class_not_contains(step, element_class, title):
