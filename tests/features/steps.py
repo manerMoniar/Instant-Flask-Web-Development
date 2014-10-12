@@ -77,6 +77,10 @@ def Debo_seleccionar_el_appointment_con_el_titulo(step, title):
         element = world.browser.find_element_by_link_text(title)
         element.click()
 
+@step(u'Debo hacer clic en el boton "([^"]*)"')
+def debo_hacer_clic_en_el_boton_group1(step, group1):
+    assert False, 'This step must be implemented'
+
 @step('Debo ver que el elemento con clase "(.*?)" no contiene "(.*?)"')
 def Debo_ver_que_el_elemento_con_clase(step, element_class, title):
     with AssertContextManager(step):
