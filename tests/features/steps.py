@@ -45,7 +45,7 @@ def debo_ver_la_cita(step, numero, cita):
 def elemento_contiene(step, element_class, value):
     with AssertContextManager(step):
         element = world.browser.find_element_by_class_name(element_class)
-        assert (value in element.text), "Got %s, %s " % (element.text, value)
+        assert (value in element.text), "Got %s" % (element.text, value)
 
 @step('Debo ver que el titulo de la pagina contiene "([^"]*)"')
 def debo_ver_titulo(step, title):
