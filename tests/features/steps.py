@@ -90,3 +90,11 @@ def Debo_ver_que_el_elemento_con_clase(step, element_class, title):
             lst.append(e.text)
 
         assert title not in lst
+"""
+
+Escenario: Eliminar un appoitment
+    Dado que vaya a "http://127.0.0.1:5000/appointments/4/"
+    Debo hacer clic en el boton "Appointment-delete-link"
+    Debo ir a "http://127.0.0.1:5000/appoitments/"
+    
+"""
