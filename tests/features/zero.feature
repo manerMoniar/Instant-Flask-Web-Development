@@ -48,4 +48,4 @@ Escenario: Eliminar un appoitment
 	Dado que vaya a "http://127.0.0.1:5000/appointments/4/"
 	Debo hacer clic en el boton "Appointment-delete-link"
 	Debo ir a "http://127.0.0.1:5000/appoitments/"
-	Debo ver que el elemento con la clase  "appointment-detail" no contiene "Follow up"
+	
