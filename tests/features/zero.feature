@@ -43,7 +43,7 @@ Escenario: Editar la fecha de un appoitment
 	Dado que vaya a "http://127.0.0.1:5000/appointments/1/edit"
 	Debo llenar el campo con id "start" con una fecha actual
 	y enviare el formulario
-	Debo ver que el elemento con clase "appointment-detail" contiene "fecha actual"
+	Debo ver que el elemento con clase "appointment-detail" contiene "2014-10-14 15:45:03"
 
 Escenario: Eliminar un appoitment
 	Dado que vaya a "http://127.0.0.1:5000/appointments/"
