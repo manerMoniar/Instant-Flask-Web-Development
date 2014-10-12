@@ -64,7 +64,7 @@ def debo_hacer_clic_en_boton(step, field_class):
 fechaActual = datetime.now().strftime("%Y-%m-%d %l:%M:%S")
 fechaActualComparacion = datetime.now().strftime("%Y-%m-%d")
 
-@step('Debo llenar el campo con id "([^"]*)" con fecha actual)
+@step('Debo llenar el campo con id "([^"]*)" con fecha actual')
 def Debo_llenar_el_campo_con_id(step, field_id):
     with AssertContextManager(step):
         text_field = world.browser.find_element_by_id(field_id)
