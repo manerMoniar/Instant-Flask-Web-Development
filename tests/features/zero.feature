@@ -41,7 +41,7 @@ Escenario: Editar un appoitment
 
 Escenario: Editar la fecha de un appoitment
 	Dado que vaya a "http://127.0.0.1:5000/appointments/1/edit"
-	Debo llenar el campo con id"start" con "2010-11-11 12:00:00"
+	Debo llenar el campo con id"start" con fecha actual
 	Y enviare el formulario
 
 Escenario: Eliminar un appoitment
