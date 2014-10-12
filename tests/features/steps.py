@@ -15,9 +15,8 @@ def setup_browser():
 def close_browser(total):
     world.browser.quit()
 
-
 @step(u'Dado que vaya a "([^"]*)"')
-def dado_que_vaya_a_lista_citas(step, url):
+def dado_que_vaya_a_url(step, url):
     world.response = world.browser.get(url)
 
 @step(u'Debo ir a "([^"]*)"')
@@ -36,12 +35,10 @@ def y_enviare_el_formulario(step):
         form = world.browser.find_element_by_tag_name('form')
         form.submit()
 
-
 @step(u'Debo ver la "([^"]*)" cita "([^"]*)"')
 def debo_ver_la_cita(step, numero, cita): 
     element = world.browser.find_element_by_css_selector("#main > div.content.container > div > div:nth-child("+numero+") > div > h3 > a")
     assert element.text == cita
-
 
 @step('Debo ver que el elemento con clase "(.*?)" contiene "(.*?)"')
 def elemento_contiene(step, element_class, value):
@@ -77,9 +74,17 @@ def Debo_seleccionar_el_appointment_con_el_titulo(step, title):
         element = world.browser.find_element_by_link_text(title)
         element.click()
 
+@step(u'Debo seleccionar la cita con titulo "([^"]*)"')
+def debo_seleccionar_la_cita_por_titulo(step, title):
+    with AssertContextManager(step):
+        element = world.browser.find_element_by_link_text(title)
+        element.click()
+
 @step(u'Debo hacer clic en el boton "([^"]*)"')
-def debo_hacer_clic_en_el_boton_group1(step, group1):
-    assert False, 'This step must be implemented'
+def debo_hacer_clic_en_el_boton(step, clase):
+    with AssertContextManager(step):
+        button = world.browser.find_element_by_class_name(clase)
+        button.click()
 
 @step('Debo ver que el elemento con clase "(.*?)" no contiene "(.*?)"')
 def Debo_ver_que_el_elemento_con_clase(step, element_class, title):
@@ -90,11 +95,3 @@ def Debo_ver_que_el_elemento_con_clase(step, element_class, title):
             lst.append(e.text)
 
         assert title not in lst
-"""
-
-Escenario: Eliminar un appoitment
-    Dado que vaya a "http://127.0.0.1:5000/appointments/4/"
-    Debo hacer clic en el boton "Appointment-delete-link"
-    Debo ir a "http://127.0.0.1:5000/appoitments/"
-    
-"""
