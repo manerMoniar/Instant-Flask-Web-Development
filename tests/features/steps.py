@@ -45,7 +45,7 @@ def debo_ver_la_cita(step, numero, cita):
 def elemento_contiene(step, element_class, value):
     with AssertContextManager(step):
         element = world.browser.find_element_by_class_name(element_class)
-        assert (value in element.text), "Got %s" % (element.text, value)
+        assert (value in element.text), "Got %s, %s " % (element.text, value)
 
 @step('Debo ver que el titulo de la pagina contiene "([^"]*)"')
 def debo_ver_titulo(step, title):
@@ -58,3 +58,13 @@ def debo_hacer_clic_en_boton(step, field_class):
     with AssertContextManager(step):
         button = world.browser.find_element_by_class_name(field_class)
         button.click()
+
+@step('Debo ver que el elemento con clase "(.*?)" no contiene "(.*?)"')
+def then_the_element_with_the_class_not_contains(step, element_class, title):
+    with AssertContextManager(step):
+        elements = world.browser.find_elements_by_class_name(element_class)
+        lst = []
+        for e in elements:
+            lst.append(e.text)
+
+        assert title not in lst
