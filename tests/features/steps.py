@@ -65,14 +65,14 @@ fechaActual = datetime.now().strftime("%Y-%m-%d %l:%M:%S")
 fechaActualComparacion = datetime.now().strftime("%Y-%m-%d")
 
 @step('Debo llenar el campo con id "([^"]*)" con fecha actual)
-def when_i_update_with_actual_date(step, field_id):
+def Debo_llenar_el_campo_con_id(step, field_id):
     with AssertContextManager(step):
         text_field = world.browser.find_element_by_id(field_id)
         text_field.clear()
         text_field.send_keys(fechaActual)
 
 @step('Debo ver que el elemento con clase "(.*?)" no contiene "(.*?)"')
-def then_the_element_with_the_class_not_contains(step, element_class, title):
+def Debo_ver_que_el_elemento_con_clase(step, element_class, title):
     with AssertContextManager(step):
         elements = world.browser.find_elements_by_class_name(element_class)
         lst = []
