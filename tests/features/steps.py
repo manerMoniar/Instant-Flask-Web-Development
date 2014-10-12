@@ -20,13 +20,15 @@ def close_browser(total):
 def dado_que_vaya_a_lista_citas(step, url):
     world.response = world.browser.get(url)
 
+@step(u'Debo ir a "([^"]*)"')
+def debo_ir_a_lista_citas(step, url):
+    world.response = world.browser.get(url)
 
 @step(u'Debo llenar el campo "([^"]*)" con "([^"]*)"')
 def debo_llenar_el_usuario_y_contrasenia(step, id, value):
     text_field = world.browser.find_element_by_id(id)
     text_field.clear()
     text_field.send_keys(value)
-
 
 @step(u'Y enviare el formulario')
 def y_enviare_el_formulario(step):
